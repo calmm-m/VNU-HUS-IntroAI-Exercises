@@ -1,1 +1,9 @@
-% Create a solution for Exercise 3.9(a), page 64
+% Create a solution for Exercise 3.9.a, page 64
+% Prove: (A <-> B) <-> ((~A | B) & (~B | A))
+
+fof(equiv_cnf, conjecture,
+  ( ( A <-> B )
+    <->
+    ( ( ~ A | B ) & ( ~ B | A ) )
+  )
+).
