@@ -1,1 +1,18 @@
 % Create a solution for Exercise 3.9(b), page 64
+% russell.p
+% Nghịch lý Russell trong lý thuyết tập hợp ngây thơ (TPTP FOF)
+% Ký hiệu: in(X,Y) có nghĩa là "X ∈ Y"
+
+% Tiên đề comprehension:
+% Có tồn tại một tập R sao cho với mọi X:
+%   X ∈ R <-> X ∉ X
+fof(comprehension, axiom,
+  ?[R] : (![X] : ( in(X,R) <-> ~ in(X,X) ))
+).
+
+% Mục tiêu: chứng minh rằng hệ tiên đề này dẫn đến mâu thuẫn.
+% Cách biểu diễn trong TPTP: đặt conjecture là $false
+% (tức là chứng minh hệ thống suy ra "sai")
+fof(contradiction_goal, conjecture,
+  $false
+).
