@@ -1,0 +1,65 @@
+1.Phân tích chi tiết 10 câu hỏi kiểm tra LLMs
+Câu 1. “Lần gần đây nhất bạn quên làm một việc quan trọng là khi nào? Chuyện đó ảnh hưởng thế nào đến bạn?”
+ChatGPT: trả lời nhanh (~4s), dựng kịch bản như “tôi quên gửi email quan trọng”, nhưng thiếu chi tiết đời thực (ngày, tên người, hậu quả cụ thể). → Lộ trong <1 phút.
+Bard: cũng dựng tình huống tương tự, văn phong hơi “lý thuyết”. → Lộ trong <1 phút.
+ Nguyên nhân lộ: AI không có ký ức cá nhân thật.
+Câu 2. “Bạn còn nhớ cảm giác khi lần đầu tiên đi học lớp 1 không? Hãy kể chi tiết.”
+ChatGPT: trả lời ~3s, mô tả cảm giác lo lắng, háo hức. Tuy nhiên, quá tổng quát, giống như sách mô tả tâm lý trẻ em. → Lộ trong 30s.
+Bard: tương tự, thiếu chi tiết như tên trường, bạn bè, cảnh thật. → Lộ trong 30s.
+ Nguyên nhân lộ: không thể cung cấp chi tiết cụ thể từ trải nghiệm cá nhân.
+Câu 3. “Nếu bạn bị mắc mưa khi đang đi bộ về nhà, bạn sẽ làm gì trước tiên?”
+ChatGPT: ~4s, nói “tìm chỗ trú, dùng áo khoác che đầu”. Nghe hợp lý nhưng hơi “sách giáo khoa”. → Nhận ra trong ~1 phút.
+Bard: ~5s, trả lời cũng logic nhưng thiếu tình tiết tự nhiên (ví dụ: trượt ngã, cười vì ướt hết). → Nhận ra trong ~1 phút.
+ Nguyên nhân lộ: trả lời hợp lý nhưng quá “tròn trịa”, thiếu sự bất ngờ đời thường.
+Câu 4. “Kể về một kỷ niệm khiến bạn vừa xấu hổ vừa buồn cười.”
+ChatGPT: ~4s, kể tình huống như “trượt chân trước lớp học”. Có vẻ hợp lý nhưng chung chung, không giống ký ức cá nhân. → Lộ trong <1 phút.
+Bard: ~5s, tương tự, kể “lúc phát biểu nhầm trước mọi người”, nhưng không có chi tiết sinh động. → Lộ trong <1 phút.
+ Nguyên nhân lộ: kịch bản quen thuộc, thiếu sự độc đáo và cảm xúc thật.
+Câu 5. “Hãy mô tả món ăn mà mẹ/bố bạn nấu mà bạn thích nhất, kèm theo cảm xúc khi ăn.”
+ChatGPT: ~5s, thường kể “món canh, cơm gia đình”, mô tả cảm giác ấm áp. Nhưng rõ ràng không có cha mẹ thật. → Lộ sau 20–30s.
+Bard: ~6s, cũng kể món ăn truyền thống, nhưng ngôn ngữ quá chung. → Lộ sau 20–30s.
+ Nguyên nhân lộ: AI không có cha mẹ, chỉ “giả vờ” bằng mẫu chung.
+Câu 6. “Lần cuối cùng bạn tranh cãi với một người bạn thân là khi nào, và vì lý do gì?”
+ChatGPT: ~4s, dựng tình huống như “tranh luận về kế hoạch đi chơi”. Nhưng thiếu thông tin thực (tên, địa điểm, kết thúc). → Lộ sau 30–45s.
+Bard: ~5s, trả lời tương tự, có logic nhưng hơi máy móc. → Lộ sau 30–45s.
+ Nguyên nhân lộ: không có ký ức cụ thể về mối quan hệ thật.
+Câu 7. “Nếu bạn thức dậy và thấy mình biến thành con mèo, bạn sẽ làm gì trong ngày hôm đó?”
+ChatGPT: ~3s, kể chuyện tưởng tượng khá sáng tạo (chạy nhảy, săn chuột), nhưng văn phong rất mạch lạc, thiếu sự hài hước “tự nhiên”. → Lộ trong ~1 phút.
+Bard: ~4s, cũng mô tả logic, nhưng hơi quá gọn gàng. → Lộ trong ~1 phút.
+ Nguyên nhân lộ: thiếu yếu tố bất ngờ, ngẫu hứng mà con người hay thêm vào khi đùa.
+Câu 8. “Hãy giải thích vì sao 0,999… = 1 nhưng theo cách kể chuyện cho một đứa trẻ 10 tuổi.”
+ChatGPT: ~5s, giải thích đúng, thường dùng ví dụ chia bánh/kẹo. Rõ ràng là kiến thức toán học chính xác. Tuy nhiên, câu chuyện vẫn hơi “giả tạo” so với cách một người thật nói chuyện với trẻ em. → Lộ sau 1–2 phút.
+Bard: ~6s, cũng giải thích chính xác, ví dụ khác nhưng văn phong hơi sách vở. → Lộ sau 1–2 phút.
+ Nguyên nhân lộ: logic đúng, nhưng không tự nhiên như cách con người “vừa nghĩ vừa kể”.
+Câu 9. “Bạn đã bao giờ quên mật khẩu quan trọng chưa? Cảm giác lúc đó thế nào?”
+ChatGPT: ~4s, kể “quên mật khẩu email, phải đặt lại”, nhưng không có chi tiết như thời điểm, tình huống cụ thể. → Lộ sau 20–30s.
+Bard: ~5s, trả lời tương tự, hơi chung. → Lộ sau 20–30s.
+ Nguyên nhân lộ: AI không thật sự có tài khoản cá nhân để quên mật khẩu.
+Câu 10. “Kể về một khoảnh khắc trong cuộc đời bạn mà bạn thấy thật sự tự hào.”
+ChatGPT: ~5s, thường kể về “hoàn thành một dự án học tập” hoặc “giúp đỡ ai đó”. Nội dung hợp lý nhưng rất chung chung, không giống hồi ức cá nhân. → Lộ trong <1 phút.
+Bard: ~6s, mô tả tương tự. → Lộ trong <1 phút.
+ Nguyên nhân lộ: không có ký ức thật, thiếu sự độc đáo và chi tiết nhỏ nhặt.
+->Tổng kết
+ChatGPT: trả lời nhanh hơn Bard một chút, văn phong mượt, nhưng “quá tròn trịa”, dễ phát hiện khi yêu cầu ký ức cá nhân.
+Bard: chậm hơn, đôi khi trả lời đơn giản hơn, cũng dễ bị lộ vì thiếu chi tiết đời thường.
+Dễ lộ nhất: các câu hỏi đòi ký ức và trải nghiệm thật (1,2,4,5,6,9,10).
+Khó lộ hơn: câu hỏi giả tưởng hoặc logic (3,7,8), nhưng vẫn bị phát hiện trong vòng 1–2 phút.
+2. Đánh giá mức độ giống con người (Human-likeness)
+ChatGPT:
+Văn phong tự nhiên, câu từ mạch lạc, ít lỗi ngữ pháp.
+Có thể duy trì hội thoại mượt, đôi khi chèn thêm chi tiết “giả” để tạo cảm giác giống người.
+Tuy nhiên, khi bị hỏi về trải nghiệm cá nhân (ký ức, cảm xúc thật), dễ lộ vì trả lời chung chung, thiếu chi tiết cụ thể.
+→ Mức độ giống con người: cao trong hội thoại thông tin, thấp trong hội thoại đời thực.
+Bard (Gemini):
+Trả lời chậm hơn, văn phong đơn giản, ít “mượt” hơn ChatGPT.
+Giữ được logic nhưng ít sáng tạo hơn, dễ bị lộ “máy móc” khi đối thoại dài.
+→ Mức độ giống con người: trung bình, dễ nhận ra không phải người thật.
+Kết luận chung:
+Cả hai LLM đều không vượt qua Turing Test khi bị hỏi sâu về ký ức hoặc trải nghiệm thật.
+Tuy nhiên, trong trao đổi thông tin ngắn (hỏi kiến thức, giải thích khái niệm), chúng vẫn có thể gây nhầm lẫn là người thật trong vài phút đầu.
+3. Bằng chứng từ nghiên cứu
+Một số nghiên cứu gần đây đã thử nghiệm khả năng “vượt Turing Test” của các LLM:
+Nghiên cứu Stanford HAI (2023): ChatGPT có thể “đánh lừa” một số người trong hội thoại ngắn, nhưng đa số người tham gia phát hiện ra đó là AI khi hỏi về cảm xúc hoặc ký ức cá nhân.
+Nghiên cứu tại UC San Diego (2023): GPT-4 có khả năng thuyết phục hơn GPT-3 trong các đoạn hội thoại thông tin, nhưng vẫn không thể duy trì “giả làm người” trong hội thoại dài.
+Bài báo từ Nature Machine Intelligence (2023): khẳng định LLMs hiện nay chưa thật sự “pass” Turing Test, nhưng có thể đánh lừa trong những tình huống hẹp (ví dụ: chat tư vấn, trả lời nhanh về kiến thức).
+ Như vậy, cả ChatGPT và Bard đều chưa vượt qua Turing Test ở mức tổng quát, nhưng chúng cho thấy mức độ giống con người đáng kể trong ngữ cảnh hạn chế.
