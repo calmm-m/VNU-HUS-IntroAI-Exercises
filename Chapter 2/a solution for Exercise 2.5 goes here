@@ -1,0 +1,116 @@
+from itertools import product
+from typing import List, Set, Iterable
+
+Literal = int
+Clause = Iterable[Literal]
+CNF = Iterable[Clause]
+
+
+def vars_in_cnf(cnf: CNF) -> Set[int]:
+    """Return the set of variable indices appearing in the CNF (absolute values)."""
+    vs = set()
+    for clause in cnf:
+        for lit in clause:
+            vs.add(abs(int(lit)))
+    return vs
+
+
+def eval_literal(lit: Literal, assignment: dict) -> bool:
+    """Evaluate a literal under a given assignment mapping var index -> bool."""
+    if lit > 0:
+        return assignment[lit]
+    else:
+        return not assignment[-lit]
+
+
+def eval_clause(clause: Clause, assignment: dict) -> bool:
+    """A clause (disjunction) is true if at least one literal is true."""
+    for lit in clause:
+        if eval_literal(int(lit), assignment):
+            return True
+    return False
+
+
+def eval_cnf(cnf: CNF, assignment: dict) -> bool:
+    """A CNF formula (conjunction of clauses) is true if every clause is true."""
+    for clause in cnf:
+        # An empty clause is always false (unsatisfiable clause)
+        if not eval_clause(clause, assignment):
+            return False
+    return True
+
+
+def truth_table_prover(cnf: CNF):
+    """Perform truth-table enumeration and report counts and verdict.
+
+    Returns a dict with keys: vars, interpretations, models, model_assignments (list of dicts)
+    """
+    vars_set = sorted(vars_in_cnf(cnf))
+    n = len(vars_set)
+
+    # Map index in product -> variable id
+    var_ids = vars_set
+
+    interpretations = 2 ** n
+    models = 0
+    model_assignments = []
+
+    # Handle no-variable special case gracefully
+    if n == 0:
+        # Only single empty assignment
+        assignment = {}
+        sat = eval_cnf(cnf, assignment)
+        models = 1 if sat else 0
+        return {
+            "vars": var_ids,
+            "interpretations": interpretations,
+            "models": models,
+            "model_assignments": model_assignments if models == 0 else [assignment],
+}
+
+    # iterate all assignments in lexicographic order
+    for bits in product([False, True], repeat=n):
+        assignment = {var_ids[i]: bits[i] for i in range(n)}
+        if eval_cnf(cnf, assignment):
+            models += 1
+            # store copy of assignment
+            model_assignments.append(dict(assignment))
+
+    return {
+        "vars": var_ids,
+        "interpretations": interpretations,
+        "models": models,
+        "model_assignments": model_assignments,
+    }
+
+
+def verdict_from_counts(interpretations: int, models: int) -> str:
+    if models == 0:
+        return "unsatisfiable"
+    if models == interpretations:
+        return "tautology (true in all interpretations)"
+    return "satisfiable (but not a tautology)"
+
+
+if _name_ == "_main_":
+    # Sample CNFs to demonstrate behavior. Edit or add your own.
+    examples = {
+        "example1": {"cnf": [[1, -2], [-1, 2]], "desc": "(x1 OR ¬x2) AND (¬x1 OR x2)"},
+        "unsat": {"cnf": [[1], [-1]], "desc": "(x1) AND (¬x1) - unsatisfiable"},
+        "tautology_empty_formula": {"cnf": [], "desc": "empty conjunction -> true (tautology)"},
+        "mixed": {"cnf": [[1, -1], [2]], "desc": "clause [1,-1] tautological but formula depends on x2"},
+    }
+
+    for name, info in examples.items():
+        cnf = info["cnf"]
+        print("===", name, "===")
+        print("description:", info["desc"])
+        result = truth_table_prover(cnf)
+        nvars = len(result["vars"])
+        print(f"variables ({nvars}):", result["vars"])
+        print("interpretations:", result["interpretations"])
+        print("models:", result["models"])
+        print("verdict:", verdict_from_counts(result["interpretations"], result["models"]))
+        if result["models"] > 0:
+            print("example model(s):", result["model_assignments"][:5])
+        print()
