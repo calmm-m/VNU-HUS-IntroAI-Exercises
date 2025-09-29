@@ -1,1 +1,17 @@
 % Create a solution for Exercise 3.9(c), page 64
+% Định nghĩa predicate siblings dựa trên child(X,F,M)
+% Ý: child(C,F,M) = C là con của (cha) F và (mẹ) M.
+% siblings(X,Y) <=> exists F,M: child(X,F,M) & child(Y,F,M) & X != Y
+
+fof(def_siblings, axiom,
+  ![X,Y] :
+    ( siblings(X,Y)
+      <=>
+      ?[F,M] : ( child(X,F,M) & child(Y,F,M) & X != Y )
+    )
+).
+
+% Conjecture: siblings là đối xứng: forall X,Y ( siblings(X,Y) => siblings(Y,X) )
+fof(siblings_symmetry, conjecture,
+  ![X,Y] : ( siblings(X,Y) => siblings(Y,X) )
+).
