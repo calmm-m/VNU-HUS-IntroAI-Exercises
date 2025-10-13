@@ -1,1 +1,22 @@
 % Create a solution for Exercise 5.4(b), page 88 
+% Kiến thức cơ sở: quan hệ cha mẹ
+parent(karen, bob).
+parent(bob, alice).
+parent(alice, clyde).
+parent(john, karen).
+parent(mary, john).
+
+% Quy tắc hậu duệ: con hoặc hậu duệ của con
+descendant(X, Y) :- parent(Y, X).
+descendant(X, Y) :- parent(Y, Z), descendant(X, Z).
+
+% Truy vấn: tìm tất cả cặp hậu duệ
+run_descendants :-
+    setof((X,Y), descendant(X,Y), Pairs),
+    write('Các cặp hậu duệ (X là hậu duệ của Y):'), nl,
+    print_pairs(Pairs).
+
+print_pairs([]).
+print_pairs([(X,Y)|Rest]) :-
+    format('~w là hậu duệ của ~w~n', [X,Y]),
+    print_pairs(Rest).
