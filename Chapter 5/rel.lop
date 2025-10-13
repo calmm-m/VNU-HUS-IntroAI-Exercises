@@ -1,1 +1,10 @@
 % Create a solution for Exercise 5.4(a), page 88 
+% Kiến thức cơ bản: quan hệ cha mẹ
+parent(karen, bob).
+parent(bob, alice).
+parent(alice, clyde).
+
+% Quy tắc: hậu duệ là con hoặc hậu duệ của con
+descendant(X, Y) :- parent(Y, X).
+descendant(X, Y) :- parent(Y, Z), descendant(X, Z).
+?- descendant(clyde, karen).
