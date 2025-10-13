@@ -1,1 +1,20 @@
 % Create a solution for Exercise 4.3, page 73
+P5. Axiomatization 5 (thêm luật “quạ không phải chim cánh cụt”)
+KB:
+
+raven(abraxas)
+
+∀x (raven(x) → bird(x))
+
+∀x (raven(x) → ¬penguin(x))
+
+penguin(tweety)
+
+∀x (penguin(x) → bird(x))
+
+∀x (bird(x) ∧ ¬penguin(x) → fly(x))
+
+∀x (penguin(x) → ¬fly(x))
+
+Trong KB này, ta có thể chứng minh: ¬fly(tweety) và fly(abraxas).
+Kết quả: hệ tiên đề mô tả đúng thế giới trực quan: Tweety (chim cánh cụt) không bay, còn Abraxas (quạ) thì bay.
