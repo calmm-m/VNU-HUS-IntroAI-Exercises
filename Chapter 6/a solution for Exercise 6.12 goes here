@@ -1,0 +1,134 @@
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Tuple, Dict, Optional, List, Set, Callable
+from heapq import heappush, heappop
+import time, random
+
+# ---------- 8-puzzle basics ----------
+State = Tuple[int, ...]                    # 9-length tuple; 0 is the blank
+GOAL: State = (1,2,3,4,5,6,7,8,0)
+
+def neighbors(state: State) -> List[Tuple[str, State]]:
+    z = state.index(0)
+    r, c = divmod(z, 3)
+    res: List[Tuple[str, State]] = []
+    def swap(nz, move):
+        s = list(state)
+        s[z], s[nz] = s[nz], s[z]
+        res.append((move, tuple(s)))
+    if r > 0: swap(z-3, "U")
+    if r < 2: swap(z+3, "D")
+    if c > 0: swap(z-1, "L")
+    if c < 2: swap(z+1, "R")
+    return res
+
+def is_solvable(state: State) -> bool:
+    arr = [x for x in state if x != 0]
+    inv = 0
+    for i in range(len(arr)):
+        for j in range(i+1, len(arr)):
+            if arr[i] > arr[j]:
+                inv += 1
+    # 3x3 solvable iff inversions is even
+    return inv % 2 == 0
+
+# ---------- heuristics ----------
+def h1_misplaced(s: State) -> int:
+    return sum(1 for i, v in enumerate(s) if v != 0 and v != GOAL[i])
+
+def h2_manhattan(s: State) -> int:
+    dist = 0
+    for idx, v in enumerate(s):
+        if v == 0: 
+            continue
+        gr, gc = divmod(v-1, 3)   # goal position
+        r, c = divmod(idx, 3)
+        dist += abs(r - gr) + abs(c - gc)
+    return dist
+
+# ---------- A* search ----------
+@dataclass
+class Result:
+    found: bool
+    path: List[str]
+    nodes_expanded: int
+    depth: int
+    time_sec: float
+
+def reconstruct(parent: Dict[State, Tuple[Optional[State], str]], goal: State) -> List[str]:
+    actions = []
+    s = goal
+    while parent[s][0] is not None:
+        p, a = parent[s]
+        actions.append(a)
+        s = p
+    actions.reverse()
+    return actions
+
+def astar(start: State, h: Callable[[State], int]) -> Result:
+    if not is_solvable(start):
+        return Result(False, [], 0, -1, 0.0)
+
+    t0 = time.time()
+    parent: Dict[State, Tuple[Optional[State], str]] = {start: (None, "")}
+    g_cost: Dict[State, int] = {start: 0}
+    pq: List[Tuple[int, int, State]] = []
+    heappush(pq, (h(start), 0, start))
+    closed: Set[State] = set()
+    nodes_expanded = 0
+
+    while pq:
+        f, g, s = heappop(pq)
+        if s in closed:
+            continue
+        if s == GOAL:
+            path = reconstruct(parent, s)
+            return Result(True, path, nodes_expanded, len(path), time.time() - t0)
+
+        closed.add(s)
+        nodes_expanded += 1
+
+        for a, s2 in neighbors(s):
+            g2 = g + 1
+            if s2 in closed:
+                continue
+            if g2 < g_cost.get(s2, 10**9):
+                g_cost[s2] = g2
+                parent[s2] = (s, a)
+                heappush(pq, (g2 + h(s2), g2, s2))
+
+    return Result(False, [], nodes_expanded, -1, time.time() - t0)
+
+# ---------- A solvable harder example (scramble the goal) ----------
+def scramble(goal: State, steps: int = 30, seed: int = 42) -> State:
+    random.seed(seed)
+    s = goal
+    last = None
+    for _ in range(steps):
+        neigh = neighbors(s)
+        if last is not None:  # avoid immediate backtracking
+            rev = {"U":"D","D":"U","L":"R","R":"L"}[last]
+            filtered = [(a, st) for (a, st) in neigh if a != rev]
+            if filtered:
+                neigh = filtered
+        a, s = random.choice(neigh)
+        last = a
+    return s
+
+# ---------- Run tests ----------
+if __name__ == "__main__":
+    tests = [
+        ("Easy (2 moves)", (1,2,3,4,0,6,7,5,8)),
+        ("Harder (scrambled)", scramble(GOAL, steps=30, seed=42)),  # guaranteed solvable
+    ]
+
+    print("{:<22} {:<25} {:>8} {:>12} {:>10} {:>9} {:>12} {:>10}".format(
+        "Case","Start","h1 depth","h1 expanded","h1 time","h2 depth","h2 expanded","h2 time"
+    ))
+    for name, start in tests:
+        r1 = astar(start, h1_misplaced)
+        r2 = astar(start, h2_manhattan)
+        print("{:<22} {:<25} {:>8} {:>12} {:>10.4f} {:>9} {:>12} {:>10.4f}".format(
+            name, str(start), r1.depth, r1.nodes_expanded, r1.time_sec,
+            r2.depth, r2.nodes_expanded, r2.time_sec
+        ))
