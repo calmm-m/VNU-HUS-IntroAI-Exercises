@@ -1,0 +1,159 @@
+from collections import deque
+from dataclasses import dataclass
+from typing import List, Tuple, Optional, Dict, Set
+
+# ---------- 8-puzzle basics ----------
+State = Tuple[int, ...]                    # 9-length tuple; 0 is the blank
+GOAL: State = (1,2,3,4,5,6,7,8,0)
+
+def neighbors(state: State):
+    z = state.index(0)
+    r, c = divmod(z, 3)
+    moves = []
+    # Up
+    if r > 0:
+        nz = z - 3
+        s = list(state); s[z], s[nz] = s[nz], s[z]
+        moves.append(("U", tuple(s)))
+    # Down
+    if r < 2:
+        nz = z + 3
+        s = list(state); s[z], s[nz] = s[nz], s[z]
+        moves.append(("D", tuple(s)))
+    # Left
+    if c > 0:
+        nz = z - 1
+        s = list(state); s[z], s[nz] = s[nz], s[z]
+        moves.append(("L", tuple(s)))
+    # Right
+    if c < 2:
+        nz = z + 1
+        s = list(state); s[z], s[nz] = s[nz], s[z]
+        moves.append(("R", tuple(s)))
+    return moves
+
+def is_solvable(state: State) -> bool:
+    arr = [x for x in state if x != 0]
+    inv = 0
+    for i in range(len(arr)):
+        for j in range(i+1, len(arr)):
+            if arr[i] > arr[j]:
+                inv += 1
+    # For 3x3, solvable iff inversion count is even
+    return inv % 2 == 0
+
+@dataclass
+class Result:
+    found: bool
+    path: List[str]
+    nodes_expanded: int
+    depth: int
+
+def reconstruct_path(parent: Dict[State, Tuple[Optional[State], str]], goal: State) -> List[str]:
+    actions = []
+    s = goal
+    while parent[s][0] is not None:
+        s_prev, a = parent[s]
+        actions.append(a)
+        s = s_prev
+    actions.reverse()
+    return actions
+
+# ---------- BFS ----------
+def bfs(start: State, goal: State = GOAL) -> Result:
+    if start == goal:
+        return Result(True, [], 0, 0)
+    frontier = deque([start])
+    parent: Dict[State, Tuple[Optional[State], str]] = {start: (None, "")}
+    visited: Set[State] = {start}
+    nodes_expanded = 0
+    while frontier:
+        s = frontier.popleft()
+        nodes_expanded += 1
+        for a, s2 in neighbors(s):
+            if s2 in visited:
+                continue
+            parent[s2] = (s, a)
+            if s2 == goal:
+                path = reconstruct_path(parent, s2)
+                return Result(True, path, nodes_expanded, len(path))
+            visited.add(s2)
+            frontier.append(s2)
+    return Result(False, [], nodes_expanded, -1)
+
+# ---------- DFS (depth-limited, graph-search style) ----------
+def dfs_depth_limited(start: State, limit: int, goal: State = GOAL) -> Tuple[str, Optional[Result]]:
+    """
+    Returns ("found", Result) if found;
+            ("failure", None) if explored fully under limit and not found.
+    (We treat hitting the limit as normal backtrack; IDDFS just increases 'limit'.)
+    """
+    nodes_expanded = 0
+    parent: Dict[State, Tuple[Optional[State], str]] = {start: (None, "")}
+    stack: List[Tuple[State, int]] = [(start, 0)]
+    on_path: Set[State] = set([start])
+
+    # to avoid regenerating neighbors repeatedly
+    neighbor_cache: Dict[State, List[Tuple[str, State]]] = {}
+
+    while stack:
+        s, depth = stack[-1]
+        if s == goal:
+            path = reconstruct_path(parent, s)
+            return "found", Result(True, path, nodes_expanded, depth)
+
+        if depth == limit:
+            stack.pop()
+            on_path.remove(s)
+            continue
+
+        if s not in neighbor_cache:
+            neighbor_cache[s] = list(neighbors(s))
+            nodes_expanded += 1
+
+        moved = False
+        while neighbor_cache[s]:
+            a, s2 = neighbor_cache[s].pop()  # LIFO over neighbors for DFS
+            if s2 in on_path:
+                continue
+            if s2 not in parent:              # graph-search: don't revisit seen states
+                parent[s2] = (s, a)
+                stack.append((s2, depth+1))
+                on_path.add(s2)
+                moved = True
+                break
+
+        if not moved:
+            stack.pop()
+            on_path.remove(s)
+
+    return "failure", None
+
+# ---------- IDDFS ----------
+def iddfs(start: State, goal: State = GOAL, max_depth: int = 40) -> Result:
+    total_expanded = 0
+    for limit in range(max_depth + 1):
+        status, res = dfs_depth_limited(start, limit, goal)
+        if status == "found":
+            total_expanded += res.nodes_expanded
+            return Result(True, res.path, total_expanded, len(res.path))
+        # else "failure" -> try larger limit
+    return Result(False, [], total_expanded, -1)
+
+# ---------- Quick test on an 8-puzzle instance ----------
+if __name__ == "__main__":
+    start: State = (1,2,3,
+                    4,0,6,
+                    7,5,8)   # solvable
+
+    print("Start:", start)
+    print("Goal :", GOAL)
+    print("Solvable?", is_solvable(start))
+
+    res_bfs = bfs(start)
+    print("\n[BFS] found:", res_bfs.found, "depth:", res_bfs.depth, "expanded:", res_bfs.nodes_expanded)
+    print("moves:", " ".join(res_bfs.path))
+
+    res_iddfs = iddfs(start, max_depth=30)
+    print("\n[IDDFS] found:", res_iddfs.found, "depth:", res_iddfs.depth, "approx expanded:", res_iddfs.nodes_expanded)
+    print("moves:", " ".join(res_iddfs.path))
